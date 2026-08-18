@@ -1,0 +1,553 @@
+SQL> INSERT INTO players VALUES (101, 'Aarav', 'India', DATE '2025-01-15');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (102, 'Meera', 'India', DATE '2025-02-20');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (103, 'Alex', 'USA', DATE '2025-03-10');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (104, 'Sophia', 'UK', DATE '2025-03-25');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (105, 'Daniel', 'Canada', DATE '2025-04-12');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (106, 'Emma', 'Australia', DATE '2025-05-05');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (107, 'Rohan', 'India', DATE '2025-05-18');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (108, 'Noah', 'USA', DATE '2025-06-02');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (109, 'Ananya', 'India', DATE '2025-06-15');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (110, 'Liam', 'UK', DATE '2025-07-01');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (111, 'Olivia', 'Australia', DATE '2025-07-20');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (112, 'Arjun', 'India', DATE '2025-08-10');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (113, 'Ethan', 'Canada', DATE '2025-08-25');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (114, 'Mia', 'USA', DATE '2025-09-05');
+
+1 row created.
+
+SQL> INSERT INTO players VALUES (115, 'Kabir', 'India', DATE '2025-09-20');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select* from players ;
+
+ PLAYER_ID PLAYER_NAME
+---------- --------------------------------------------------
+COUNTRY                        SIGNUP_DA
+------------------------------ ---------
+       101 Aarav
+India                          15-JAN-25
+
+       102 Meera
+India                          20-FEB-25
+
+       103 Alex
+USA                            10-MAR-25
+
+
+ PLAYER_ID PLAYER_NAME
+---------- --------------------------------------------------
+COUNTRY                        SIGNUP_DA
+------------------------------ ---------
+       104 Sophia
+UK                             25-MAR-25
+
+       105 Daniel
+Canada                         12-APR-25
+
+       106 Emma
+Australia                      05-MAY-25
+
+
+ PLAYER_ID PLAYER_NAME
+---------- --------------------------------------------------
+COUNTRY                        SIGNUP_DA
+------------------------------ ---------
+       107 Rohan
+India                          18-MAY-25
+
+       108 Noah
+USA                            02-JUN-25
+
+       109 Ananya
+India                          15-JUN-25
+
+
+ PLAYER_ID PLAYER_NAME
+---------- --------------------------------------------------
+COUNTRY                        SIGNUP_DA
+------------------------------ ---------
+       110 Liam
+UK                             01-JUL-25
+
+       111 Olivia
+Australia                      20-JUL-25
+
+       112 Arjun
+India                          10-AUG-25
+
+
+ PLAYER_ID PLAYER_NAME
+---------- --------------------------------------------------
+COUNTRY                        SIGNUP_DA
+------------------------------ ---------
+       113 Ethan
+Canada                         25-AUG-25
+
+       114 Mia
+USA                            05-SEP-25
+
+       115 Kabir
+India                          20-SEP-25
+
+
+15 rows selected.
+
+SQL> INSERT INTO games VALUES (1, 'Battle Arena', 'Action', DATE '2024-01-10');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (2, 'Speed Racer', 'Racing', DATE '2024-03-15');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (3, 'Mystic Quest', 'RPG', DATE '2024-05-20');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (4, 'City Builder', 'Simulation', DATE '2024-07-05');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (5, 'Galaxy Warriors', 'Action', DATE '2024-09-12');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (6, 'Football Pro', 'Sports', DATE '2024-11-18');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (7, 'Puzzle World', 'Puzzle', DATE '2025-02-10');
+
+1 row created.
+
+SQL> INSERT INTO games VALUES (8, 'Zombie Survival', 'Adventure', DATE '2025-04-25');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from games;
+
+   GAME_ID GAME_NAME
+---------- --------------------------------------------------
+GENRE                          RELEASE_D
+------------------------------ ---------
+         1 Battle Arena
+Action                         10-JAN-24
+
+         2 Speed Racer
+Racing                         15-MAR-24
+
+         3 Mystic Quest
+RPG                            20-MAY-24
+
+
+   GAME_ID GAME_NAME
+---------- --------------------------------------------------
+GENRE                          RELEASE_D
+------------------------------ ---------
+         4 City Builder
+Simulation                     05-JUL-24
+
+         5 Galaxy Warriors
+Action                         12-SEP-24
+
+         6 Football Pro
+Sports                         18-NOV-24
+
+
+   GAME_ID GAME_NAME
+---------- --------------------------------------------------
+GENRE                          RELEASE_D
+------------------------------ ---------
+         7 Puzzle World
+Puzzle                         10-FEB-25
+
+         8 Zombie Survival
+Adventure                      25-APR-25
+
+
+8 rows selected.
+
+SQL> INSERT INTO sessions VALUES (1, 101, 1, DATE '2026-01-05', 45);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (2, 102, 1, DATE '2026-01-06', 60);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (3, 103, 2, DATE '2026-01-07', 35);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (4, 104, 3, DATE '2026-01-08', 80);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (5, 105, 4, DATE '2026-01-09', 50);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (6, 106, 5, DATE '2026-01-10', 90);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (7, 107, 1, DATE '2026-01-11', 55);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (8, 108, 2, DATE '2026-01-12', 40);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (9, 109, 3, DATE '2026-01-13', 70);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (10, 110, 6, DATE '2026-01-14', 65);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (11, 111, 7, DATE '2026-01-15', 30);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (12, 112, 8, DATE '2026-01-16', 75);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (13, 113, 5, DATE '2026-01-17', 85);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (14, 114, 1, DATE '2026-01-18', 50);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (15, 115, 2, DATE '2026-01-19', 45);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (16, 101, 3, DATE '2026-02-02', 90);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (17, 102, 5, DATE '2026-02-05', 75);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (18, 103, 1, DATE '2026-02-08', 60);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (19, 104, 4, DATE '2026-02-10', 40);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (20, 105, 6, DATE '2026-02-12', 70);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (21, 106, 1, DATE '2026-02-15', 100);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (22, 107, 8, DATE '2026-02-18', 65);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (23, 108, 5, DATE '2026-02-20', 95);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (24, 109, 3, DATE '2026-02-22', 85);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (25, 110, 2, DATE '2026-02-25', 55);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (26, 111, 7, DATE '2026-03-01', 35);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (27, 112, 8, DATE '2026-03-03', 80);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (28, 113, 5, DATE '2026-03-05', 90);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (29, 114, 1, DATE '2026-03-07', 65);
+
+1 row created.
+
+SQL> INSERT INTO sessions VALUES (30, 115, 2, DATE '2026-03-10', 50);
+
+1 row created.
+
+SQL> commit ;
+
+Commit complete.
+
+SQL> select * from sessions ;
+
+SESSION_ID  PLAYER_ID    GAME_ID SESSION_D DURATION_MINUTES
+---------- ---------- ---------- --------- ----------------
+         1        101          1 05-JAN-26               45
+         2        102          1 06-JAN-26               60
+         3        103          2 07-JAN-26               35
+         4        104          3 08-JAN-26               80
+         5        105          4 09-JAN-26               50
+         6        106          5 10-JAN-26               90
+         7        107          1 11-JAN-26               55
+         8        108          2 12-JAN-26               40
+         9        109          3 13-JAN-26               70
+        10        110          6 14-JAN-26               65
+        11        111          7 15-JAN-26               30
+
+SESSION_ID  PLAYER_ID    GAME_ID SESSION_D DURATION_MINUTES
+---------- ---------- ---------- --------- ----------------
+        12        112          8 16-JAN-26               75
+        13        113          5 17-JAN-26               85
+        14        114          1 18-JAN-26               50
+        15        115          2 19-JAN-26               45
+        16        101          3 02-FEB-26               90
+        17        102          5 05-FEB-26               75
+        18        103          1 08-FEB-26               60
+        19        104          4 10-FEB-26               40
+        20        105          6 12-FEB-26               70
+        21        106          1 15-FEB-26              100
+        22        107          8 18-FEB-26               65
+
+SESSION_ID  PLAYER_ID    GAME_ID SESSION_D DURATION_MINUTES
+---------- ---------- ---------- --------- ----------------
+        23        108          5 20-FEB-26               95
+        24        109          3 22-FEB-26               85
+        25        110          2 25-FEB-26               55
+        26        111          7 01-MAR-26               35
+        27        112          8 03-MAR-26               80
+        28        113          5 05-MAR-26               90
+        29        114          1 07-MAR-26               65
+        30        115          2 10-MAR-26               50
+
+30 rows selected.
+
+SQL> INSERT INTO purchases VALUES (1, 101, 1, DATE '2026-01-05', 499);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (2, 102, 1, DATE '2026-01-06', 299);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (3, 103, 2, DATE '2026-01-07', 199);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (4, 104, 3, DATE '2026-01-08', 599);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (5, 105, 4, DATE '2026-01-09', 349);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (6, 106, 5, DATE '2026-01-10', 799);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (7, 107, 1, DATE '2026-01-11', 499);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (8, 108, 2, DATE '2026-01-12', 249);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (9, 109, 3, DATE '2026-01-13', 699);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (10, 110, 6, DATE '2026-01-14', 399);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (11, 111, 7, DATE '2026-01-15', 149);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (12, 112, 8, DATE '2026-01-16', 549);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (13, 113, 5, DATE '2026-01-17', 899);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (14, 114, 1, DATE '2026-01-18', 349);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (15, 115, 2, DATE '2026-01-19', 199);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO purchases VALUES (16, 101, 3, DATE '2026-02-02', 499);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (17, 102, 5, DATE '2026-02-05', 799);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (18, 103, 1, DATE '2026-02-08', 299);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (19, 104, 4, DATE '2026-02-10', 399);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (20, 105, 6, DATE '2026-02-12', 449);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO purchases VALUES (21, 106, 1, DATE '2026-02-15', 599);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (22, 107, 8, DATE '2026-02-18', 699);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (23, 108, 5, DATE '2026-02-20', 999);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (24, 109, 3, DATE '2026-02-22', 549);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (25, 110, 2, DATE '2026-02-25', 299);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO purchases VALUES (26, 111, 7, DATE '2026-03-01', 199);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (27, 112, 8, DATE '2026-03-03', 599);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (28, 113, 5, DATE '2026-03-05', 749);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (29, 114, 1, DATE '2026-03-07', 449);
+
+1 row created.
+
+SQL> INSERT INTO purchases VALUES (30, 115, 2, DATE '2026-03-10', 249);
+
+1 row created.
+
+SQL> commit ;
+
+Commit complete.
+
+SQL> select * from purchases ;
+
+PURCHASE_ID  PLAYER_ID    GAME_ID PURCHASE_     AMOUNT
+----------- ---------- ---------- --------- ----------
+          1        101          1 05-JAN-26        499
+          2        102          1 06-JAN-26        299
+          3        103          2 07-JAN-26        199
+          4        104          3 08-JAN-26        599
+          5        105          4 09-JAN-26        349
+          6        106          5 10-JAN-26        799
+          7        107          1 11-JAN-26        499
+          8        108          2 12-JAN-26        249
+          9        109          3 13-JAN-26        699
+         10        110          6 14-JAN-26        399
+         11        111          7 15-JAN-26        149
+
+PURCHASE_ID  PLAYER_ID    GAME_ID PURCHASE_     AMOUNT
+----------- ---------- ---------- --------- ----------
+         12        112          8 16-JAN-26        549
+         13        113          5 17-JAN-26        899
+         14        114          1 18-JAN-26        349
+         15        115          2 19-JAN-26        199
+         16        101          3 02-FEB-26        499
+         17        102          5 05-FEB-26        799
+         18        103          1 08-FEB-26        299
+         19        104          4 10-FEB-26        399
+         20        105          6 12-FEB-26        449
+         21        106          1 15-FEB-26        599
+         22        107          8 18-FEB-26        699
+
+PURCHASE_ID  PLAYER_ID    GAME_ID PURCHASE_     AMOUNT
+----------- ---------- ---------- --------- ----------
+         23        108          5 20-FEB-26        999
+         24        109          3 22-FEB-26        549
+         25        110          2 25-FEB-26        299
+         26        111          7 01-MAR-26        199
+         27        112          8 03-MAR-26        599
+         28        113          5 05-MAR-26        749
+         29        114          1 07-MAR-26        449
+         30        115          2 10-MAR-26        249
+
+30 rows selected.
