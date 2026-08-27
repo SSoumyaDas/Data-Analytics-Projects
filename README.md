@@ -5,7 +5,7 @@ Aspiring Data Analyst | B.Tech CSE (2021-2025) | Bangalore
 Welcome! This repository contains my end-to-end Data Analytics projects covering **Excel, Power BI, SQL & Python**.
 
 > **Seeking Entry-Level Data Analyst Roles | Open to Work**
-> 📍 Bangalore | 📧 soumyasalipadas@gmail.com | [Resume](link)
+> 📍 Bangalore | 📧 soumyasalipadas@gmail.com | [Resume](Ssoumya_Resume.pdf)
 
 ### 🛠️ Skills
 `Excel (Pivot, Power Query) | Power BI (DAX, Data Modeling) | PostgreSQL | Python (Pandas, NumPy, Matplotlib, Seaborn) | Statistics`
