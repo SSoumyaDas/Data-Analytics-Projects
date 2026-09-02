@@ -1,0 +1,4 @@
+file,column,description
+customers.csv,customer_id,Unique customer id
+products.csv,product_id,Unique product id
+transactions.csv,transaction_id,Unique transaction id
