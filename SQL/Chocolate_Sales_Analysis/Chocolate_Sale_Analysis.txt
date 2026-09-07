@@ -1,0 +1,831 @@
+Q1. How many records are present in each dataset?
+
+SQL> select count(*) from customers ;
+
+  COUNT(*)
+----------
+     50000
+
+SQL> select count(*) from products ;
+
+  COUNT(*)
+----------
+       200
+
+SQL> select count(*) from stores ;
+
+  COUNT(*)
+----------
+       100
+
+SQL> select count(*) from sales ;
+
+  COUNT(*)
+----------
+   1000000
+
+SQL> select count(*) from calendar ;
+
+  COUNT(*)
+----------
+       731
+
+Q2.Are there any duplicate customer, product, store, or order IDs?
+
+SQL> SELECT customer_id, COUNT(*) AS cnt
+  2  FROM customers
+  3  GROUP BY customer_id
+  4  HAVING COUNT(*) > 1;
+
+no rows selected
+
+SQL> SELECT store_id, COUNT(*) AS cnt
+  2  FROM stores
+  3  GROUP BY store_id
+  4  HAVING COUNT(*) > 1;
+
+no rows selected
+
+SQL> SELECT order_id, COUNT(*) AS cnt
+  2  FROM sales
+  3  GROUP BY order_id
+  4  HAVING COUNT(*) > 1;
+
+no rows selected
+
+SQL> SELECT product_id, COUNT(*) AS cnt
+  2  FROM products
+  3  GROUP BY product_id
+  4  HAVING COUNT(*) > 1;
+
+no rows selected
+
+Q3.Are all sales records correctly linked to customers, stores, products, and calendar dates?
+
+SQL> SELECT COUNT(*) AS unmatched_customers
+  2  FROM sales s
+  3  LEFT JOIN customers c
+  4      ON s.customer_id = c.customer_id
+  5  WHERE c.customer_id IS NULL;
+
+UNMATCHED_CUSTOMERS
+-------------------
+                  0
+
+SQL> SELECT COUNT(*) AS unmatched_stores
+  2  FROM sales s
+  3  LEFT JOIN stores st
+  4      ON s.store_id = st.store_id
+  5  WHERE st.store_id IS NULL;
+
+UNMATCHED_STORES
+----------------
+               0
+
+SQL> SELECT COUNT(*) AS unmatched_dates
+  2  FROM sales s
+  3  LEFT JOIN calendar c
+  4      ON s.order_date = c.date_value
+  5  WHERE c.date_value IS NULL;
+
+UNMATCHED_DATES
+---------------
+              0
+
+SQL> SELECT COUNT(*) AS unmatched_products
+  2  FROM sales s
+  3  LEFT JOIN products p
+  4      ON s.product_id = p.product_id
+  5  WHERE p.product_id IS NULL;
+
+UNMATCHED_PRODUCTS
+------------------
+              9764
+
+SQL> SELECT
+  2      s.product_id,
+  3      COUNT(*) AS transactions,
+  4      SUM(s.revenue) AS revenue
+  5  FROM sales s
+  6  LEFT JOIN products p
+  7      ON s.product_id = p.product_id
+  8  WHERE p.product_id IS NULL
+  9  GROUP BY s.product_id
+ 10  ORDER BY s.product_id;
+
+PRODUCT_ID           TRANSACTIONS    REVENUE
+-------------------- ------------ ----------
+P0000                        4895  123803.56
+P0201                        4869  123677.08
+
+Q4. Are there any NULL values in the datasets?
+
+SQL> SELECT
+  2      COUNT(*) AS total_rows,
+  3      SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END) AS null_customer_id,
+  4      SUM(CASE WHEN age IS NULL THEN 1 ELSE 0 END) AS null_age,
+  5      SUM(CASE WHEN gender IS NULL THEN 1 ELSE 0 END) AS null_gender,
+  6      SUM(CASE WHEN loyalty_member IS NULL THEN 1 ELSE 0 END) AS null_loyalty,
+  7      SUM(CASE WHEN join_date IS NULL THEN 1 ELSE 0 END) AS null_join_date
+  8  FROM customers;
+
+TOTAL_ROWS NULL_CUSTOMER_ID   NULL_AGE NULL_GENDER NULL_LOYALTY NULL_JOIN_DATE
+---------- ---------------- ---------- ----------- ------------ --------------
+     50000                0          0           0            0              0
+
+
+SQL> SELECT
+  2      COUNT(*) AS total_rows,
+  3      SUM(CASE WHEN product_id IS NULL THEN 1 ELSE 0 END) AS null_product_id,
+  4      SUM(CASE WHEN product_name IS NULL THEN 1 ELSE 0 END) AS null_product_name,
+  5      SUM(CASE WHEN brand IS NULL THEN 1 ELSE 0 END) AS null_brand,
+  6      SUM(CASE WHEN category IS NULL THEN 1 ELSE 0 END) AS null_category,
+  7      SUM(CASE WHEN cocoa_percent IS NULL THEN 1 ELSE 0 END) AS null_cocoa,
+  8      SUM(CASE WHEN weight_g IS NULL THEN 1 ELSE 0 END) AS null_weight
+  9  FROM products;
+
+TOTAL_ROWS NULL_PRODUCT_ID NULL_PRODUCT_NAME NULL_BRAND NULL_CATEGORY NULL_COCOA
+---------- --------------- ----------------- ---------- ------------- ----------
+NULL_WEIGHT
+-----------
+       200               0                 0          0             0          0
+          0
+
+
+SQL> SELECT
+  2      COUNT(*) AS total_rows,
+  3      SUM(CASE WHEN store_id IS NULL THEN 1 ELSE 0 END) AS null_store_id,
+  4      SUM(CASE WHEN store_name IS NULL THEN 1 ELSE 0 END) AS null_store_name,
+  5      SUM(CASE WHEN city IS NULL THEN 1 ELSE 0 END) AS null_city,
+  6      SUM(CASE WHEN country IS NULL THEN 1 ELSE 0 END) AS null_country,
+  7      SUM(CASE WHEN store_type IS NULL THEN 1 ELSE 0 END) AS null_store_type
+  8  FROM stores;
+
+TOTAL_ROWS NULL_STORE_ID NULL_STORE_NAME  NULL_CITY NULL_COUNTRY NULL_STORE_TYPE
+---------- ------------- --------------- ---------- ------------ ---------------
+       100             0               0          0            0               0
+
+
+SQL> SELECT
+  2      COUNT(*) AS total_rows,
+  3      SUM(CASE WHEN order_id IS NULL THEN 1 ELSE 0 END) AS null_order_id,
+  4      SUM(CASE WHEN order_date IS NULL THEN 1 ELSE 0 END) AS null_order_date,
+  5      SUM(CASE WHEN product_id IS NULL THEN 1 ELSE 0 END) AS null_product_id,
+  6      SUM(CASE WHEN store_id IS NULL THEN 1 ELSE 0 END) AS null_store_id,
+  7      SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END) AS null_customer_id,
+  8      SUM(CASE WHEN quantity IS NULL THEN 1 ELSE 0 END) AS null_quantity,
+  9      SUM(CASE WHEN unit_price IS NULL THEN 1 ELSE 0 END) AS null_unit_price,
+ 10      SUM(CASE WHEN discount IS NULL THEN 1 ELSE 0 END) AS null_discount,
+ 11      SUM(CASE WHEN revenue IS NULL THEN 1 ELSE 0 END) AS null_revenue,
+ 12      SUM(CASE WHEN cost IS NULL THEN 1 ELSE 0 END) AS null_cost,
+ 13      SUM(CASE WHEN profit IS NULL THEN 1 ELSE 0 END) AS null_profit
+ 14  FROM sales;
+
+TOTAL_ROWS NULL_ORDER_ID NULL_ORDER_DATE NULL_PRODUCT_ID NULL_STORE_ID
+---------- ------------- --------------- --------------- -------------
+NULL_CUSTOMER_ID NULL_QUANTITY NULL_UNIT_PRICE NULL_DISCOUNT NULL_REVENUE
+---------------- ------------- --------------- ------------- ------------
+ NULL_COST NULL_PROFIT
+---------- -----------
+   1000000             0               0               0             0
+               0             0               0             0            0
+         0           0
+
+
+Q5.Are there any invalid sales values such as negative quantity, price, discount, revenue, or cost?
+
+SQL> SELECT COUNT(*) AS invalid_quantity
+  2  FROM sales
+  3  WHERE quantity <= 0;
+
+INVALID_QUANTITY
+----------------
+               0
+
+
+SQL> SELECT COUNT(*) AS invalid_price
+  2  FROM sales
+  3  WHERE unit_price <= 0;
+
+INVALID_PRICE
+-------------
+            0
+
+
+SQL> SELECT COUNT(*) AS invalid_discount
+  2  FROM sales
+  3  WHERE discount < 0 OR discount > 1;
+
+INVALID_DISCOUNT
+----------------
+               0
+
+
+SQL> SELECT COUNT(*) AS invalid_revenue
+  2  FROM sales
+  3  WHERE revenue < 0;
+
+INVALID_REVENUE
+---------------
+              0
+
+
+SQL> SELECT COUNT(*) AS invalid_cost
+  2  FROM sales
+  3  WHERE cost < 0;
+
+INVALID_COST
+------------
+           0
+
+Q6.Is the calculated profit consistent with Revenue - Cost?
+
+SQL> SELECT COUNT(*) AS incorrect_profit
+  2  FROM sales
+  3  WHERE ABS(profit - (revenue - cost)) > 0.01;
+
+INCORRECT_PROFIT
+----------------
+               0
+
+Q7.What are the total transactions, quantity sold, revenue, cost, profit, average transaction value , overall profit margin ?
+
+SQL> SELECT
+  2      COUNT(*) AS total_transactions,
+  3      SUM(quantity) AS total_quantity_sold,
+  4      ROUND(SUM(revenue), 2) AS total_revenue,
+  5      ROUND(SUM(cost), 2) AS total_cost,
+  6      ROUND(SUM(profit), 2) AS total_profit,
+  7      ROUND(AVG(revenue), 2) AS avg_transaction_value,
+  8      ROUND((SUM(profit) / SUM(revenue)) * 100, 2) AS profit_margin
+  9  FROM sales;
+
+TOTAL_TRANSACTIONS TOTAL_QUANTITY_SOLD TOTAL_REVENUE TOTAL_COST TOTAL_PROFIT AVG_TRANSACTION_VALUE
+------------------ ------------------- ------------- ---------- ------------ ---------------------
+PROFIT_MARGIN
+-------------
+           1000000             2999589    25486128.9 15291554.4   10194564.6                 25.49
+           40
+
+Q7.1.How do sales and profitability compare between 2023 and 2024?
+
+SQL> SELECT
+  2      EXTRACT(YEAR FROM order_date) AS sales_year,
+  3      COUNT(*) AS transactions,
+  4      SUM(quantity) AS quantity_sold,
+  5      ROUND(SUM(revenue), 2) AS revenue,
+  6      ROUND(SUM(cost), 2) AS cost,
+  7      ROUND(SUM(profit), 2) AS profit,
+  8      ROUND((SUM(profit) / SUM(revenue)) * 100, 2) AS profit_margin
+  9  FROM sales
+ 10  GROUP BY EXTRACT(YEAR FROM order_date)
+ 11  ORDER BY sales_year;
+
+SALES_YEAR TRANSACTIONS QUANTITY_SOLD    REVENUE       COST     PROFIT PROFIT_MARGIN
+---------- ------------ ------------- ---------- ---------- ---------- -------------
+      2023       499570       1498104 12735106.3 7641502.68 5093596.88            40
+      2024       500430       1501485 12751022.6 7650051.72 5100967.75            40
+
+
+Q7.2.What are the monthly revenue and profit trends?
+
+SQL> SELECT
+  2      TO_CHAR(order_date, 'YYYY-MM') AS sales_month,
+  3      COUNT(*) AS transactions,
+  4      ROUND(SUM(revenue), 2) AS revenue,
+  5      ROUND(SUM(profit), 2) AS profit
+  6  FROM sales
+  7  GROUP BY TO_CHAR(order_date, 'YYYY-MM')
+  8  ORDER BY sales_month;
+
+SALES_M TRANSACTIONS    REVENUE     PROFIT
+------- ------------ ---------- ----------
+2023-01        42907  1095019.2  438230.77
+2023-02        38112  968948.95  387259.34
+2023-03        42446 1084656.09  433765.09
+2023-04        40831 1038425.32  415827.16
+2023-05        42566 1083418.79  433491.77
+2023-06        41082 1046045.02   418154.9
+2023-07        42393 1083223.13  432958.32
+2023-08        42477 1086689.94  434989.24
+2023-09        41240 1056935.75  422089.21
+2023-10        42387 1071879.65  428744.79
+2023-11        40870 1039418.12  416065.63
+2023-12        42259 1080446.31  432020.66
+2024-01        42468    1084751  433505.26
+2024-02        39671 1010042.22   403832.7
+2024-03        42522 1084560.82  434068.29
+2024-04        40781 1043453.14  417541.94
+2024-05        42458 1078643.18   431456.8
+2024-06        40711 1038214.24   415998.2
+2024-07        42547 1085923.34  434268.21
+2024-08        42456  1082353.6  433282.13
+2024-09        41225 1051414.03  420756.85
+2024-10        42334  1075082.2  430246.18
+2024-11        40851  1039335.1  415617.27
+2024-12        42406 1077249.72  430393.92
+
+Q7.3.Which product categories generate the highest revenue and profit?
+
+SQL> SELECT
+  2      p.category,
+  3      COUNT(*) AS transactions,
+  4      SUM(s.quantity) AS quantity_sold,
+  5      ROUND(SUM(s.revenue), 2) AS revenue,
+  6      ROUND(SUM(s.profit), 2) AS profit,
+  7      ROUND((SUM(s.profit) / SUM(s.revenue)) * 100, 2) AS profit_margin
+  8  FROM sales s
+  9  JOIN products p
+ 10      ON s.product_id = p.product_id
+ 11  GROUP BY p.category
+ 12  ORDER BY revenue DESC;
+
+CATEGORY                                           TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT
+-------------------------------------------------- ------------ ------------- ---------- ----------
+PROFIT_MARGIN
+-------------
+Praline                                                  261678        784435 6665641.32 2665242.79
+        39.98
+
+White                                                    238513        714967  6070172.2 2428117.37
+           40
+
+Dark                                                     207727        623247 5298123.27 2120672.08
+        40.03
+
+Truffle                                                  153729        462202 3924343.24 1569202.54
+        39.99
+
+Milk                                                     128589        385619 3280368.19 1312407.13
+        40.01
+
+Q.8. Which brands generate the highest revenue and profit?
+
+SQL> SELECT
+  2      p.brand,
+  3      COUNT(*) AS transactions,
+  4      SUM(s.quantity) AS quantity_sold,
+  5      ROUND(SUM(s.revenue), 2) AS revenue,
+  6      ROUND(SUM(s.profit), 2) AS profit,
+  7      ROUND((SUM(s.profit) / SUM(s.revenue)) * 100, 2) AS profit_margin
+  8  FROM sales s
+  9  JOIN products p
+ 10      ON s.product_id = p.product_id
+ 11  GROUP BY p.brand
+ 12  ORDER BY revenue DESC;
+
+BRAND                                              TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT
+-------------------------------------------------- ------------ ------------- ---------- ----------
+PROFIT_MARGIN
+-------------
+Ferrero                                                  183603        552056 4689031.21 1876268.09
+        40.01
+
+Cadbury                                                  183230        548993 4666426.41 1865555.75
+        39.98
+
+Lindt                                                    173163        519702 4422825.33 1770184.54
+        40.02
+
+Mars                                                     163441        489216 4151625.34  1660828.8
+           40
+
+Godiva                                                   148973        446436 3789363.14 1514949.08
+        39.98
+
+Hershey                                                  137826        414067 3519376.79 1407855.65
+           40
+
+
+Q8.Which store type generates the highest revenue and profit?
+
+SQL> SELECT
+  2      st.store_type,
+  3      COUNT(*) AS transactions,
+  4      SUM(s.quantity) AS quantity_sold,
+  5      ROUND(SUM(s.revenue), 2) AS revenue,
+  6      ROUND(SUM(s.profit), 2) AS profit,
+  7      ROUND((SUM(s.profit) / SUM(s.revenue)) * 100, 2) AS profit_margin
+  8  FROM sales s
+  9  JOIN stores st
+ 10      ON s.store_id = st.store_id
+ 11  GROUP BY st.store_type
+ 12  ORDER BY revenue DESC;
+
+STORE_TYPE                     TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT PROFIT_MARGIN
+------------------------------ ------------ ------------- ---------- ---------- -------------
+Airport                              299119        896417 7613875.92 3046173.74         40.01
+Mall                                 260061        780511 6628228.67 2650844.14         39.99
+Online                               250332        751100 6386035.76 2554237.38            40
+Retail                               190488        571561 4857988.51 1943309.37            40
+
+
+Q9.Which country generates the highest revenue and profit?
+
+SQL> SELECT
+  2      st.country,
+  3      COUNT(*) AS transactions,
+  4      SUM(s.quantity) AS quantity_sold,
+  5      ROUND(SUM(s.revenue), 2) AS revenue,
+  6      ROUND(SUM(s.profit), 2) AS profit,
+  7      ROUND((SUM(s.profit) / SUM(s.revenue)) * 100, 2) AS profit_margin
+  8  FROM sales s
+  9  JOIN stores st
+ 10      ON s.store_id = st.store_id
+ 11  GROUP BY st.country
+ 12  ORDER BY revenue DESC;
+
+COUNTRY                                            TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT
+-------------------------------------------------- ------------ ------------- ---------- ----------
+PROFIT_MARGIN
+-------------
+Canada                                                   200084        599270 5085319.05 2033421.87
+        39.99
+
+UK                                                       189058        567747 4823617.98 1930196.57
+        40.02
+
+USA                                                      170022        510229 4341494.26 1736809.58
+           40
+
+France                                                   170174        510035  4339730.9 1735814.29
+           40
+
+Australia                                                150569        451891  3834803.4 1534350.44
+        40.01
+
+Germany                                                  120093        360417 3061163.27 1223971.88
+        39.98
+
+
+Q10. How do loyalty members compare with non-loyalty members in terms of revenue, profit, and transactions?
+
+SQL> SELECT
+  2      CASE
+  3          WHEN c.loyalty_member = 1 THEN 'Loyalty Member'
+  4          ELSE 'Non-Loyalty Member'
+  5      END AS customer_type,
+  6      COUNT(DISTINCT c.customer_id) AS customers,
+  7      COUNT(s.order_id) AS transactions,
+  8      SUM(s.quantity) AS quantity_sold,
+  9      ROUND(SUM(s.revenue), 2) AS revenue,
+ 10      ROUND(SUM(s.profit), 2) AS profit,
+ 11      ROUND((SUM(s.profit) / SUM(s.revenue)) * 100, 2) AS profit_margin
+ 12  FROM customers c
+ 13  JOIN sales s
+ 14      ON c.customer_id = s.customer_id
+ 15  GROUP BY c.loyalty_member
+ 16  ORDER BY revenue DESC;
+
+CUSTOMER_TYPE       CUSTOMERS TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT PROFIT_MARGIN
+------------------ ---------- ------------ ------------- ---------- ---------- -------------
+Loyalty Member          25104       501898       1505064 12773040.5 5109004.39            40
+Non-Loyalty Member      24896       498102       1494525 12713088.4 5085560.24            40
+
+
+Q11.What is the average revenue and profit generated per customer by loyalty status?
+
+SQL> SELECT
+  2      CASE
+  3          WHEN c.loyalty_member = 1 THEN 'Loyalty Member'
+  4          ELSE 'Non-Loyalty Member'
+  5      END AS customer_type,
+  6      COUNT(DISTINCT c.customer_id) AS customers,
+  7      ROUND(SUM(s.revenue) / COUNT(DISTINCT c.customer_id), 2)
+  8          AS avg_revenue_per_customer,
+  9      ROUND(SUM(s.profit) / COUNT(DISTINCT c.customer_id), 2)
+ 10          AS avg_profit_per_customer,
+ 11      ROUND(COUNT(s.order_id) / COUNT(DISTINCT c.customer_id), 2)
+ 12          AS avg_transactions_per_customer
+ 13  FROM customers c
+ 14  JOIN sales s
+ 15      ON c.customer_id = s.customer_id
+ 16  GROUP BY c.loyalty_member
+ 17  ORDER BY avg_revenue_per_customer DESC;
+
+CUSTOMER_TYPE       CUSTOMERS AVG_REVENUE_PER_CUSTOMER AVG_PROFIT_PER_CUSTOMER
+------------------ ---------- ------------------------ -----------------------
+AVG_TRANSACTIONS_PER_CUSTOMER
+-----------------------------
+Non-Loyalty Member      24896                   510.65                  204.27
+                        20.01
+
+Loyalty Member          25104                    508.8                  203.51
+                        19.99
+
+Q12.Who are the top 10 customers based on revenue?
+
+SQL> SELECT *
+  2  FROM (
+  3      SELECT
+  4          c.customer_id,
+  5          c.age,
+  6          c.gender,
+  7          CASE
+  8              WHEN c.loyalty_member = 1 THEN 'Loyalty Member'
+  9              ELSE 'Non-Loyalty Member'
+ 10          END AS customer_type,
+ 11          COUNT(s.order_id) AS transactions,
+ 12          SUM(s.quantity) AS quantity_sold,
+ 13          ROUND(SUM(s.revenue), 2) AS revenue,
+ 14          ROUND(SUM(s.profit), 2) AS profit
+ 15      FROM customers c
+ 16      JOIN sales s
+ 17          ON c.customer_id = s.customer_id
+ 18      GROUP BY
+ 19          c.customer_id,
+ 20          c.age,
+ 21          c.gender,
+ 22          c.loyalty_member
+ 23      ORDER BY revenue DESC
+ 24  )
+ 25  WHERE ROWNUM <= 10;
+
+CUSTOMER_ID                 AGE GENDER               CUSTOMER_TYPE      TRANSACTIONS QUANTITY_SOLD
+-------------------- ---------- -------------------- ------------------ ------------ -------------
+   REVENUE     PROFIT
+---------- ----------
+C033309                      46 Male                 Loyalty Member               39           125
+   1183.16     467.38
+
+C009919                      32 Male                 Loyalty Member               38           128
+   1153.66      451.1
+
+C044802                      53 Male                 Loyalty Member               34           115
+   1123.37     437.72
+
+C024448                      24 Male                 Non-Loyalty Member           32           113
+   1111.54     426.64
+
+C026507                      40 Female               Loyalty Member               37           119
+    1104.1     445.33
+
+C020498                      33 Male                 Loyalty Member               35           117
+   1100.16     419.45
+
+C028533                      65 Female               Non-Loyalty Member           33           115
+   1099.16     440.62
+
+C032746                      31 Female               Non-Loyalty Member           35           110
+   1096.58     448.42
+
+C019742                      21 Male                 Loyalty Member               34           124
+   1096.15     426.61
+
+C040736                      53 Female               Loyalty Member               33           117
+   1095.84     455.15
+
+Q13.How does sales performance differ by gender?
+
+SQL> SELECT
+  2      c.gender,
+  3      COUNT(DISTINCT c.customer_id) AS customers,
+  4      COUNT(s.order_id) AS transactions,
+  5      SUM(s.quantity) AS quantity_sold,
+  6      ROUND(SUM(s.revenue), 2) AS revenue,
+  7      ROUND(SUM(s.profit), 2) AS profit,
+  8      ROUND(SUM(s.revenue) / COUNT(DISTINCT c.customer_id), 2)
+  9          AS avg_revenue_per_customer
+ 10  FROM customers c
+ 11  JOIN sales s
+ 12      ON c.customer_id = s.customer_id
+ 13  GROUP BY c.gender
+ 14  ORDER BY revenue DESC;
+
+GENDER                CUSTOMERS TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT
+-------------------- ---------- ------------ ------------- ---------- ----------
+AVG_REVENUE_PER_CUSTOMER
+------------------------
+Male                      25242       504311       1513313 12856025.3  5141541.2
+                  509.31
+
+Female                    24758       495689       1486276 12630103.6 5053023.43
+                  510.14
+
+Q14. Which age group generates the highest revenue and profit?
+
+SQL> SELECT
+  2      CASE
+  3          WHEN c.age BETWEEN 18 AND 25 THEN '18-25'
+  4          WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+  5          WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+  6          WHEN c.age BETWEEN 46 AND 55 THEN '46-55'
+  7          WHEN c.age BETWEEN 56 AND 65 THEN '56-65'
+  8          ELSE '66-70'
+  9      END AS age_group,
+ 10      COUNT(DISTINCT c.customer_id) AS customers,
+ 11      COUNT(s.order_id) AS transactions,
+ 12      SUM(s.quantity) AS quantity_sold,
+ 13      ROUND(SUM(s.revenue), 2) AS revenue,
+ 14      ROUND(SUM(s.profit), 2) AS profit,
+ 15      ROUND(SUM(s.revenue) / COUNT(DISTINCT c.customer_id), 2) AS avg_revenue_per_customer
+ 16  FROM customers c
+ 17  JOIN sales s
+ 18      ON c.customer_id = s.customer_id
+ 19  GROUP BY
+ 20      CASE
+ 21          WHEN c.age BETWEEN 18 AND 25 THEN '18-25'
+ 22          WHEN c.age BETWEEN 26 AND 35 THEN '26-35'
+ 23          WHEN c.age BETWEEN 36 AND 45 THEN '36-45'
+ 24          WHEN c.age BETWEEN 46 AND 55 THEN '46-55'
+ 25          WHEN c.age BETWEEN 56 AND 65 THEN '56-65'
+ 26          ELSE '66-70'
+ 27      END
+ 28  ORDER BY age_group;
+
+AGE_G  CUSTOMERS TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT AVG_REVENUE_PER_CUSTOMER
+----- ---------- ------------ ------------- ---------- ---------- ------------------------
+18-25       7635       152419        457516 3884290.46 1552629.42                   508.75
+26-35       9275       185700        556915 4733427.26 1894800.96                   510.34
+36-45       9452       188389        564928 4805659.13 1922157.72                   508.43
+46-55       9378       187550        562285 4776723.79 1910728.04                   509.35
+56-65       9555       191696        574904 4885155.01 1953260.91                   511.27
+66-70       4705        94246        283041 2400873.21  960987.58                   510.28
+
+
+Q15. How does discount level affect transaction value, revenue, profit, and profit margin?
+
+SQL> SELECT
+  2      discount,
+  3      COUNT(*) AS transactions,
+  4      SUM(quantity) AS quantity_sold,
+  5      ROUND(SUM(revenue), 2) AS revenue,
+  6      ROUND(SUM(profit), 2) AS profit,
+  7      ROUND(AVG(revenue), 2) AS avg_transaction_value,
+  8      ROUND((SUM(profit) / SUM(revenue)) * 100, 2) AS profit_margin
+  9  FROM sales
+ 10  GROUP BY discount
+ 11  ORDER BY discount;
+
+  DISCOUNT TRANSACTIONS QUANTITY_SOLD    REVENUE     PROFIT AVG_TRANSACTION_VALUE PROFIT_MARGIN
+---------- ------------ ------------- ---------- ---------- --------------------- -------------
+         0       625128       1875668 16886767.4 6755930.99                 27.01         40.01
+        .1       124563        372814 3023539.21 1209601.52                 24.27         40.01
+       .15       125405        375966 2879166.34 1150410.62                 22.96         39.96
+        .2       124904        375141 2696655.92  1078621.5                 21.59            40
+
+
+Q16. What are the top 10 products by revenue?
+
+SQL> SELECT *
+  2  FROM (
+  3      SELECT
+  4          p.product_id,
+  5          p.product_name,
+  6          p.brand,
+  7          p.category,
+  8          SUM(s.quantity) AS quantity_sold,
+  9          ROUND(SUM(s.revenue), 2) AS revenue,
+ 10          ROUND(SUM(s.profit), 2) AS profit
+ 11      FROM sales s
+ 12      JOIN products p
+ 13          ON s.product_id = p.product_id
+ 14      GROUP BY
+ 15          p.product_id,
+ 16          p.product_name,
+ 17          p.brand,
+ 18          p.category
+ 19      ORDER BY revenue DESC
+ 20  )
+ 21  WHERE ROWNUM <= 10;
+
+PRODUCT_ID
+--------------------
+PRODUCT_NAME
+----------------------------------------------------------------------------------------------------
+BRAND
+--------------------------------------------------
+CATEGORY                                           QUANTITY_SOLD    REVENUE     PROFIT
+-------------------------------------------------- ------------- ---------- ----------
+P0091
+Dark Chocolate 60%
+Cadbury
+Dark                                                       15457  131813.61   52591.75
+
+P0107
+Truffle Chocolate 80%
+Ferrero
+Truffle                                                    15468  131799.85   52896.71
+
+P0010
+Milk Chocolate 70%
+Hershey
+Truffle                                                    15333  130258.58      52267
+
+P0008
+White Chocolate 90%
+Godiva
+Dark                                                       15327  130153.07   52092.31
+
+P0133
+Milk Chocolate 90%
+Lindt
+Dark                                                       15198  129789.85   52155.85
+
+P0017
+White Chocolate 50%
+Hershey
+Milk                                                       15204  129728.58   51765.77
+
+P0104
+Praline Chocolate 80%
+Godiva
+Truffle                                                    15278  129672.14   51788.79
+
+P0063
+Praline Chocolate 90%
+Lindt
+White                                                      15183   129637.5   52177.96
+
+P0073
+Milk Chocolate 50%
+Mars
+Praline                                                    15205  129625.49    51699.1
+
+P0140
+Dark Chocolate 80%
+Lindt
+Milk                                                       15112  129569.78    51987.7
+
+
+Q17. What are the top 10 products by profit?
+
+SQL> SELECT *
+  2  FROM (
+  3      SELECT
+  4          p.product_id,
+  5          p.product_name,
+  6          p.brand,
+  7          p.category,
+  8          SUM(s.quantity) AS quantity_sold,
+  9          ROUND(SUM(s.revenue), 2) AS revenue,
+ 10          ROUND(SUM(s.profit), 2) AS profit
+ 11      FROM sales s
+ 12      JOIN products p
+ 13          ON s.product_id = p.product_id
+ 14      GROUP BY
+ 15          p.product_id,
+ 16          p.product_name,
+ 17          p.brand,
+ 18          p.category
+ 19      ORDER BY profit DESC
+ 20  )
+ 21  WHERE ROWNUM <= 10;
+
+PRODUCT_ID
+--------------------
+PRODUCT_NAME
+----------------------------------------------------------------------------------------------------
+BRAND
+--------------------------------------------------
+CATEGORY                                           QUANTITY_SOLD    REVENUE     PROFIT
+-------------------------------------------------- ------------- ---------- ----------
+P0107
+Truffle Chocolate 80%
+Ferrero
+Truffle                                                    15468  131799.85   52896.71
+
+P0091
+Dark Chocolate 60%
+Cadbury
+Dark                                                       15457  131813.61   52591.75
+
+P0010
+Milk Chocolate 70%
+Hershey
+Truffle                                                    15333  130258.58      52267
+
+P0063
+Praline Chocolate 90%
+Lindt
+White                                                      15183   129637.5   52177.96
+
+P0133
+Milk Chocolate 90%
+Lindt
+Dark                                                       15198  129789.85   52155.85
+
+P0008
+White Chocolate 90%
+Godiva
+Dark                                                       15327  130153.07   52092.31
+
+P0140
+Dark Chocolate 80%
+Lindt
+Milk                                                       15112  129569.78    51987.7
+
+P0108
+Dark Chocolate 60%
+Lindt
+Truffle                                                    14903   128878.1   51863.63
+
+P0054
+Truffle Chocolate 80%
+Lindt
+Praline                                                    15100  129554.85   51806.33
+
+P0199
+Dark Chocolate 70%
+Hershey
+White                                                      15194  129489.05   51792.44
