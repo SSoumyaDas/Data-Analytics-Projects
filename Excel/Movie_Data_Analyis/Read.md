@@ -154,3 +154,6 @@ an interactive dashboard.
 
 It showcases my ability to clean data, analyze trends, create visualizations, and communicate insights using Excel.
 
+*Author* 
+---
+**Soumya**
