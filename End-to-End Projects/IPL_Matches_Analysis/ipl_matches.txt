@@ -1,0 +1,404 @@
+CREATE TABLE ipl_matches (
+    id NUMBER,
+    season VARCHAR2(10),
+    city VARCHAR2(100),
+    match_date DATE,
+    match_type VARCHAR2(50),
+    player_of_match VARCHAR2(100),
+    venue VARCHAR2(200),
+    team1 VARCHAR2(100),
+    team2 VARCHAR2(100),
+    toss_winner VARCHAR2(100),
+    toss_decision VARCHAR2(10),
+    winner VARCHAR2(100),
+    result VARCHAR2(20),
+    result_margin NUMBER,
+    target_runs NUMBER,
+    target_overs NUMBER,
+    super_over VARCHAR2(5),
+    method VARCHAR2(20),
+    umpire1 VARCHAR2(100),
+    umpire2 VARCHAR2(100),
+    toss_winner_won VARCHAR2(5)
+);
+
+Q1. How many matches are in the dataset?
+
+SELECT COUNT(*) AS total_matches
+FROM ipl_matches;
+
+
+TOTAL_MATCHES
+-------------
+         1095
+
+Q2. How many matches were played in each season?
+
+SELECT season,
+       COUNT(*) AS total_matches
+FROM ipl_matches
+GROUP BY season
+ORDER BY season;
+
+SEASON     TOTAL_MATCHES
+---------- -------------
+2007/08               58
+2009                  57
+2009/10               60
+2011                  73
+2012                  74
+2013                  76
+2014                  60
+2015                  59
+2016                  60
+2017                  59
+2018                  60
+2019                  60
+2020/21               60
+2021                  60
+2022                  74
+2023                  74
+2024                  71
+
+Q3.Which teams have won the most matches?
+
+SELECT winner,
+       COUNT(*) AS total_wins
+FROM ipl_matches
+WHERE winner IS NOT NULL
+GROUP BY winner
+ORDER BY total_wins DESC;
+
+
+WINNER                     TOTAL_WINS
+----------                 ----------
+Mumbai Indians                144
+Chennai Super Kings           138
+Kolkata Knight Riders         131
+Royal Challengers Bengaluru   123
+Delhi Capitals                115
+Punjab Kings                  112
+Rajasthan Royals              112
+Sunrisers Hyderabad            88
+Deccan Chargers                29
+Gujarat Titans                 28
+Lucknow Super Giants           24
+Rising Pune Supergiant         15
+Gujarat Lions                  13
+Pune Warriors                  12
+Kochi Tuskers Kerala            6
+
+Q4. Which teams have the highest win percentage?
+
+SELECT team,
+       COUNT(*) AS matches_played,
+       SUM(CASE WHEN winner = team THEN 1 ELSE 0 END) AS total_wins,
+       ROUND(SUM(CASE WHEN winner = team THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS win_percentage
+FROM (
+    SELECT team1 AS team, winner FROM ipl_matches
+    UNION ALL
+    SELECT team2 AS team, winner FROM ipl_matches
+)
+GROUP BY team
+ORDER BY win_percentage DESC;
+
+
+TEAM                       MATCHES_PLAYED   TOTAL_WINS    WIN_PERCENTAGE
+------------              ----------------  -----------    --------------
+Gujarat Titans                    45             28            62.22
+Chennai Super Kings              238            138            57.98
+Mumbai Indians                   261            144            55.17
+Lucknow Super Giants              44             24            54.55
+Kolkata Knight Riders            251            131            52.19
+Rajasthan Royals                 221            112            50.68
+Rising Pune Supergiant            30             15            50
+Sunrisers Hyderabad              182             88            48.35
+Royal Challengers Bengaluru      255            123            48.24
+Delhi Capitals                   252            115            45.63
+Punjab Kings                     246            112            45.53
+Gujarat Lions                     30             13            43.33
+Kochi Tuskers Kerala              14              6            42.86
+Deccan Chargers                   75             29            38.67
+Pune Warriors                     46             12            26.09
+
+Q5. What is the toss decision distribution?
+
+SELECT toss_decision,
+       COUNT(*) AS total_matches,
+       ROUND(COUNT(*) / (SELECT COUNT(*) FROM ipl_matches) * 100, 2) AS percentage
+FROM ipl_matches
+GROUP BY toss_decision
+ORDER BY total_matches DESC;
+
+
+TOSS_DECIS TOTAL_MATCHES PERCENTAGE
+---------- ------------- ----------
+field                704      64.29
+bat                  391      35.71
+
+Q6. Does winning the toss also mean winning the match?
+
+SELECT toss_winner_won,
+       COUNT(*) AS total_matches,
+       ROUND(
+           COUNT(*) / (SELECT COUNT(*) FROM ipl_matches) * 100,
+           2
+       ) AS percentage
+FROM ipl_matches
+GROUP BY toss_winner_won
+ORDER BY toss_winner_won;
+
+TOSS_ TOTAL_MATCHES PERCENTAGE
+----- ------------- ----------
+No              541      49.41
+Yes             554      50.59
+
+Q7. Does the toss decision relate to winning the match?
+
+SELECT toss_decision,
+       toss_winner_won,
+       COUNT(*) AS total_matches
+FROM ipl_matches
+GROUP BY toss_decision, toss_winner_won
+ORDER BY toss_decision, toss_winner_won;
+
+TOSS_DECIS TOSS_ TOTAL_MATCHES
+---------- ----- -------------
+bat        No              214
+bat        Yes             177
+field      No              327
+field      Yes             377
+
+Q8.Which players have won the most Player of the Match awards?
+
+SELECT player_of_match,
+       awards
+FROM (
+    SELECT player_of_match,
+           COUNT(*) AS awards
+    FROM ipl_matches
+    WHERE player_of_match IS NOT NULL
+    GROUP BY player_of_match
+    ORDER BY awards DESC
+)
+WHERE ROWNUM <= 5;
+
+PLAYER_OF_MATCH            AWARDS
+----------------          ---------
+AB de Villiers               25
+CH Gayle                     22
+RG Sharma                    19
+V Kohli                      18
+DA Warner                    18
+
+
+Q9. Which venues have hosted the most matches?
+
+SELECT venue,
+       total_matches
+FROM (
+    SELECT venue,
+           COUNT(*) AS total_matches
+    FROM ipl_matches
+    GROUP BY venue
+    ORDER BY total_matches DESC
+)
+WHERE ROWNUM <= 5;
+
+
+
+VENUE                                   TOTAL_MATCHES
+-------------                         -----------------
+Eden Gardens                                  77
+Wankhede Stadium                              73
+M Chinnaswamy Stadium                         65
+Feroz Shah Kotla                              60
+Rajiv Gandhi International Stadium, Uppal     49
+
+Q10. What were the biggest wins by runs?
+
+COLUMN match_date FORMAT A12
+COLUMN team1 FORMAT A25
+COLUMN team2 FORMAT A25
+COLUMN winner FORMAT A25
+COLUMN result_margin FORMAT 999
+
+SELECT match_date,
+       team1,
+       team2,
+       winner,
+       result_margin
+FROM (
+    SELECT match_date,
+           team1,
+           team2,
+           winner,
+           result_margin
+    FROM ipl_matches
+    WHERE result = 'runs'
+    ORDER BY result_margin DESC
+)
+WHERE ROWNUM <= 5;
+
+
+MATCH_DATE      TEAM1                            TEAM2                        WINNER                        RESULT_MARGIN
+-----------  ------------                    -------------                   ---------                     ----------------
+06-MAY-17    Delhi Capitals                  Mumbai Indians                Mumbai Indians                        146
+14-MAY-16    Royal Challengers Bengaluru     Gujarat Lions                 Royal Challengers Bengaluru           144
+18-APR-08    Royal Challengers Bengaluru     Kolkata Knight Riders         Kolkata Knight Riders                 140
+06-MAY-15    Royal Challengers Bengaluru     Punjab Kings                  Royal Challengers Bengaluru           138
+23-APR-13    Royal Challengers Bengaluru     Pune Warriors                 Royal Challengers Bengaluru           130
+
+Q11.What were the biggest wins by wickets?
+
+SELECT match_date,
+       team1,
+       team2,
+       winner,
+       result_margin
+FROM (
+    SELECT match_date,
+           team1,
+           team2,
+           winner,
+           result_margin
+    FROM ipl_matches
+    WHERE result = 'wickets'
+    ORDER BY result_margin DESC
+)
+WHERE ROWNUM <= 5;
+
+
+MATCH_DATE      TEAM1                              TEAM2                       WINNER                    RESULT_MARGIN
+------------ -------------                      -------------                 -----------               ------------------
+18-MAR-10    Royal Challengers Bengaluru     Rajasthan Royals            Royal Challengers Bengaluru            10
+20-MAY-11    Mumbai Indians                  Rajasthan Royals            Rajasthan Royals                       10
+10-APR-13    Punjab Kings                    Chennai Super Kings         Chennai Super Kings                    10
+19-APR-09    Delhi Capitals                  Punjab Kings                Delhi Capitals                         10
+27-APR-08    Mumbai Indians                  Deccan Chargers             Deccan Chargers                        10
+
+Q12. How many matches went to a Super Over?
+
+SELECT super_over,
+       COUNT(*) AS total_matches
+FROM ipl_matches
+GROUP BY super_over
+ORDER BY super_over;
+
+SUPER TOTAL_MATCHES
+----- -------------
+N              1081
+Y                14
+
+Q13. Which seasons had the most Super Over matches?
+
+SELECT season,
+       COUNT(*) AS super_over_matches
+FROM ipl_matches
+WHERE super_over = 'Y'
+GROUP BY season
+ORDER BY super_over_matches DESC;
+
+SEASON     SUPER_OVER_MATCHES
+---------- ------------------
+2020/21                     4
+2013                        2
+2019                        2
+2014                        1
+2021                        1
+2009                        1
+2009/10                     1
+2017                        1
+2015                        1
+
+Q14.What were the match results by season?
+
+SELECT season,
+       result,
+       COUNT(*) AS total_matches
+FROM ipl_matches
+GROUP BY season, result
+ORDER BY season, result;
+
+SEASON     RESULT               TOTAL_MATCHES
+---------- -------------------- -------------
+2007/08    runs                            24
+2007/08    wickets                         34
+2009       runs                            27
+2009       tie                              1
+2009       wickets                         29
+2009/10    runs                            31
+2009/10    tie                              1
+2009/10    wickets                         28
+2011       no result                        1
+2011       runs                            33
+2011       wickets                         39
+2012       runs                            34
+2012       wickets                         40
+2013       runs                            37
+2013       tie                              2
+2013       wickets                         37
+2014       runs                            22
+2014       tie                              1
+2014       wickets                         37
+2015       no result                        2
+2015       runs                            32
+2015       tie                              1
+2015       wickets                         24
+2016       runs                            21
+2016       wickets                         39
+2017       runs                            26
+2017       tie                              1
+2017       wickets                         32
+2018       runs                            28
+2018       wickets                         32
+2019       no result                        1
+2019       runs                            22
+2019       tie                              2
+2019       wickets                         35
+2020/21    runs                            27
+2020/21    tie                              4
+2020/21    wickets                         29
+2021       runs                            22
+2021       tie                              1
+2021       wickets                         37
+2022       runs                            37
+2022       wickets                         37
+2023       no result                        1
+2023       runs                            40
+2023       wickets                         33
+2024       runs                            35
+2024       wickets                         36
+
+Q15.Which teams played the most matches?
+
+SELECT team,
+       COUNT(*) AS matches_played
+FROM (
+    SELECT team1 AS team
+    FROM ipl_matches
+    UNION ALL
+    SELECT team2 AS team
+    FROM ipl_matches
+)
+GROUP BY team
+ORDER BY matches_played DESC;
+
+
+TEAM                                    MATCHES_PLAYED
+--------------                        ------------------
+Mumbai Indians                                261
+Royal Challengers Bengaluru                   255
+Delhi Capitals                                252
+Kolkata Knight Riders                         251
+Punjab Kings                                  246
+Chennai Super Kings                           238
+Rajasthan Royals                              221
+Sunrisers Hyderabad                           182
+Deccan Chargers                                75
+Pune Warriors                                  46
+Gujarat Titans                                 45
+Lucknow Super Giants                           44
+Rising Pune Supergiant                         30
+Gujarat Lions                                  30
+Kochi Tuskers Kerala                           14
